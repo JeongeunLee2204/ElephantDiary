@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<h1>Home Page</h1>
+
+<div th:if="${#authentication != null}">
+    <p th:text="'로그인된 사용자: ' + ${#authentication.name}"></p>
+    <p th:text="'이름: ' + ${userName}"></p>
+    <p th:text="'이름: ' + ${#authentication.principal.attributes['name']}"></p>
+    <img th:src="${picture}" alt="프로필 이미지" width="100" height="100">
+    <a href="/logout">로그아웃</a>
+</div>
+
+<div th:if="${#authentication == null}">
+    <p>로그인이 필요합니다.</p>
+    <a href="/oauth2/authorization/google">Google 로그인</a>
+</div>
+</body>
+</html>
