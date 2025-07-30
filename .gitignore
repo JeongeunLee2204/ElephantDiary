@@ -38,6 +38,3 @@ out/
 
 # Secret properties
 src/main/resources/application.properties
-
-#environment
-.env
