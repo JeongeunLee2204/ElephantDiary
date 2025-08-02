@@ -1,15 +1,11 @@
 package com.diary.backend.diary;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
-
 
 @Entity
 public class Diary {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,9 +14,29 @@ public class Diary {
     private String content;
     private LocalDate date;
 
-    // 작성자 정보(예: 구글 로그인 ID)
     private String userId;
 
-    // Getter, Setter 등 생략
-}
+    public Diary() {}
 
+    public Diary(String title, String content, LocalDate date, String userId) {
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.userId = userId;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+}

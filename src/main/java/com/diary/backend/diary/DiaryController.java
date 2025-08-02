@@ -1,6 +1,8 @@
 package com.diary.backend.diary;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +18,16 @@ public class DiaryController {
     }
 
     @PostMapping
-    public ResponseEntity<Diary> saveDiary(@RequestBody Diary diary) {
+    public ResponseEntity<Diary> saveDiary(@RequestBody Diary diary,
+                                           @AuthenticationPrincipal OAuth2User principal) {
+        String userId = principal.getAttribute("email");
+        diary.setUserId(userId);
         return ResponseEntity.ok(diaryRepository.save(diary));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Diary>> getDiaries(@PathVariable String userId) {
+    @GetMapping
+    public ResponseEntity<List<Diary>> getMyDiaries(@AuthenticationPrincipal OAuth2User principal) {
+        String userId = principal.getAttribute("email");
         return ResponseEntity.ok(diaryRepository.findByUserId(userId));
     }
 }
