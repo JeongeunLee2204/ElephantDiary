@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//elephantdb2 사용-application.properties 참고
 @RestController
 @RequestMapping("/api/diary")
 public class DiaryController {
