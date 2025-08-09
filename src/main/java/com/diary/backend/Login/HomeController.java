@@ -39,7 +39,7 @@ public class HomeController {
             System.out.println("로그인되지 않은 사용자입니다.");
         }
 
-        return "redirect:/mypage";
+        return "redirect:/list";
     }
 
     @GetMapping("/api/user/me")
