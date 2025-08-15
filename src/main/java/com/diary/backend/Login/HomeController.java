@@ -41,7 +41,7 @@ public class HomeController {
 
         return "redirect:/list";
     }
-
+/*
     @GetMapping("/api/user/me")
     @ResponseBody
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal OAuth2User principal) {
@@ -55,7 +55,7 @@ public class HomeController {
         userInfo.put("picture", principal.getAttribute("picture"));
 
         return ResponseEntity.ok(userInfo);
-    }
+    }*/
 
 
 }
