@@ -1,6 +1,5 @@
 package com.diary.backend.list;
 
-import com.diary.backend.diary.Diary;
 import com.diary.backend.diary.DiaryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +50,8 @@ public class ListController {
                         d.getId(),
                         d.getTitle(),
                         d.getContent(),
-                        d.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toString()
+                        d.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toString(),
+                        d.getScore()
                 ))
                 .toList();
 
@@ -59,5 +59,5 @@ public class ListController {
     }
 
     public record UserMeResponse(String userId, String email, String name) {}
-    public record DiaryListItem(Long id, String title, String content, String date) {}
+    public record DiaryListItem(Long id, String title, String content, String date, Integer score) {}
 }

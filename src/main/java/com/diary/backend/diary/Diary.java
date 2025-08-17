@@ -13,16 +13,18 @@ public class Diary {
     private String title;
     private String content;
     private LocalDate date;
+    private Integer score;
 
     private String userId;
 
     public Diary() {}
 
-    public Diary(String title, String content, LocalDate date, String userId) {
+    public Diary(String title, String content, LocalDate date, String userId, Integer score) {
         this.title = title;
         this.content = content;
         this.date = date;
         this.userId = userId;
+        this.score=score;
     }
 
     public Long getId() { return id; }
@@ -36,6 +38,9 @@ public class Diary {
 
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
+
+    public Integer getScore() { return score; }
+    public void setScore(String userId) { this.score = score; }
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
