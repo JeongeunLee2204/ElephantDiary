@@ -5,13 +5,15 @@ import java.time.LocalDate;
 
 @Entity
 public class Diary {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+    @Column(length = 10000)
     private String content;
+    @Column(length = 1000)
+    private String summary;
     private LocalDate date;
     private Integer score;
 
@@ -24,7 +26,7 @@ public class Diary {
         this.content = content;
         this.date = date;
         this.userId = userId;
-        this.score=score;
+        this.score = score;
     }
 
     public Long getId() { return id; }
@@ -36,11 +38,14 @@ public class Diary {
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 
+    public String getSummary() { return summary; }
+    public void setSummary(String summary) { this.summary = summary; }
+
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
 
     public Integer getScore() { return score; }
-    public void setScore(String userId) { this.score = score; }
+    public void setScore(Integer score) { this.score = score; }
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
