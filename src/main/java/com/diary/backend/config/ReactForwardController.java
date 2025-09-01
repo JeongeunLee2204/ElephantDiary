@@ -5,10 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class ReactForwardController {
-
-    @GetMapping({"/", "/mypage", "/login", "/register", "/write", "/list", "/diary/**"})
+    @GetMapping({
+            "/",
+            "/login", "/register",
+            "/mypage", "/write", "/list",
+            "/diary/**"
+    })
     public String forwardToReact() {
         return "forward:/index.html";
     }
-
 }

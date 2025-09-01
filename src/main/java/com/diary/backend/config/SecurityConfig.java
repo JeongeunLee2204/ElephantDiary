@@ -14,37 +14,41 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 0) RequestCache 끄기: 정적 리소스 요청이 세션에 저장되어 state 꼬이는 것 방지
+                // 정적 리소스 요청을 RequestCache에 쌓지 않도록
                 .requestCache(cache -> cache.disable())
 
-                // 1) 공개 경로
                 .authorizeHttpRequests(auth -> auth
+                        // 정적/루트/빌드 산출물은 공개
                         .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/assets/**",
+                                "/", "/index.html",
+                                "/assets/**", "/static/**",
                                 "/css/**", "/js/**",
                                 "/favicon.ico",
                                 "/manifest.webmanifest",
-                                // 누락되어 로그인 루프 유발하던 정적 리소스
                                 "/vite.svg",
-                                "/default-ui.css",
-                                // 로그인/에러/OAuth2 엔드포인트는 반드시 공개
+                                "/default-ui.css"
+                        ).permitAll()
+
+                        // OAuth2 로그인/콜백/에러 등 공개
+                        .requestMatchers(
                                 "/login", "/login/**",
-                                "/oauth2/**",
+                                "/oauth2/**", "/login/oauth2/**",
                                 "/error"
                         ).permitAll()
-                        // 나머지는 인증 필요
-                        .anyRequest().authenticated()
+
+                        // API만 인증 요구
+                        .requestMatchers("/api/**").authenticated()
+
+                        // 그 외(프론트 라우트 포함)는 공개 → ReactForwardController가 index.html 로 포워딩
+                        .anyRequest().permitAll()
                 )
 
-                // 2) OAuth2 로그인
+                // OAuth2 로그인: 이전 페이지 복구를 쓰거나, 존재하는 경로로 고정
                 .oauth2Login(oauth -> oauth
-                        // 원래 페이지 복구 대신 고정 성공 URL (RequestCache disable과 궁합)
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/list", true)
                 )
 
-                // 3) 로그아웃
+                // 로그아웃
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
@@ -52,12 +56,12 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                 )
 
-                // 4) 세션
+                // 세션
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
-                // 5) 개발 편의
+                // 개발 편의
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
