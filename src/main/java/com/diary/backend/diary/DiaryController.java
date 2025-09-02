@@ -21,17 +21,23 @@ public class DiaryController {
     @PostMapping
     public ResponseEntity<Diary> saveDiary(@RequestBody Diary diary,
                                            @AuthenticationPrincipal OAuth2User principal) {
+        System.out.println("📌 POST /api/diary 들어옴");
         if (principal == null) {
             return ResponseEntity.status(401).build();
         }
+
+        // 로그인 사용자
         String userId = principal.getAttribute("email");
         diary.setUserId(userId);
 
-        if (diary.getContent() != null) {
-            String trimmed = diary.getContent().strip();
-            String summary = trimmed.length() <= 20 ? trimmed : trimmed.substring(0, 20);
-            diary.setSummary(trimmed.isEmpty() ? "(빈 일기)" : summary);
-        }
+        // ✅ content가 null이어도 summary는 항상 세팅되도록 보장
+        String content = diary.getContent();
+        String trimmed = (content == null) ? "" : content.strip();
+        String summary = trimmed.isEmpty()
+                ? "(빈 일기)"
+                : trimmed.substring(0, Math.min(20, trimmed.length()));
+        diary.setSummary(summary);
+        System.out.println("SUMMARY 저장됨: " + diary.getSummary());
 
         return ResponseEntity.ok(diaryRepository.save(diary));
     }
@@ -53,7 +59,7 @@ public class DiaryController {
         }
         String userId = principal.getAttribute("email");
         return diaryRepository.findById(id)
-                .filter(d -> Objects.equals(d.getUserId(), userId)) // null-safe 비교
+                .filter(d -> Objects.equals(d.getUserId(), userId))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -66,21 +72,23 @@ public class DiaryController {
             return ResponseEntity.status(401).build();
         }
         String userId = principal.getAttribute("email");
+
         return diaryRepository.findById(id)
                 .filter(d -> Objects.equals(d.getUserId(), userId))
                 .map(d -> {
-                    if (req.getTitle() != null)   d.setTitle(req.getTitle());
+                    if (req.getTitle() != null) d.setTitle(req.getTitle());
 
                     if (req.getContent() != null) {
                         d.setContent(req.getContent());
-
                         String trimmed = req.getContent().strip();
-                        String summary = trimmed.length() <= 20 ? trimmed : trimmed.substring(0, 20);
-                        d.setSummary(trimmed.isEmpty() ? "(빈 일기)" : summary);
+                        String summary = trimmed.isEmpty()
+                                ? "(빈 일기)"
+                                : trimmed.substring(0, Math.min(20, trimmed.length()));
+                        d.setSummary(summary);
                     }
 
-                    if (req.getDate() != null)    d.setDate(req.getDate());
-                    if (req.getScore() != null)   d.setScore(req.getScore());
+                    if (req.getDate() != null)  d.setDate(req.getDate());
+                    if (req.getScore() != null) d.setScore(req.getScore());
 
                     return ResponseEntity.ok(diaryRepository.save(d));
                 })
@@ -96,8 +104,10 @@ public class DiaryController {
         String userId = principal.getAttribute("email");
         var opt = diaryRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
         var diary = opt.get();
         if (!Objects.equals(userId, diary.getUserId())) return ResponseEntity.notFound().build();
+
         diaryRepository.delete(diary);
         return ResponseEntity.noContent().build();
     }

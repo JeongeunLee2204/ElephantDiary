@@ -1,29 +1,36 @@
 package com.diary.backend.diary;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@JsonInclude(JsonInclude.Include.ALWAYS)  // ✅ null 필드도 항상 응답에 포함
 @Entity
 public class Diary {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
+
     @Column(length = 10000)
     private String content;
-    @Column(length = 1000)
+
     private String summary;
+
     private LocalDate date;
+
     private Integer score;
 
     private String userId;
 
     public Diary() {}
 
-    public Diary(String title, String content, LocalDate date, String userId, Integer score) {
+    public Diary(String title, String content, String summary, LocalDate date, String userId, Integer score) {
         this.title = title;
         this.content = content;
+        this.summary = summary;
         this.date = date;
         this.userId = userId;
         this.score = score;
