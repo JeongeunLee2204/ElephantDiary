@@ -21,7 +21,7 @@ public class DiaryController {
     @PostMapping
     public ResponseEntity<Diary> saveDiary(@RequestBody Diary diary,
                                            @AuthenticationPrincipal OAuth2User principal) {
-        System.out.println("📌 POST /api/diary 들어옴");
+        //System.out.println("📌 POST /api/diary 들어옴");
         if (principal == null) {
             return ResponseEntity.status(401).build();
         }
@@ -37,7 +37,7 @@ public class DiaryController {
                 ? "(빈 일기)"
                 : trimmed.substring(0, Math.min(20, trimmed.length()));
         diary.setSummary(summary);
-        System.out.println("SUMMARY 저장됨: " + diary.getSummary());
+        //System.out.println("SUMMARY 저장됨: " + diary.getSummary());
 
         return ResponseEntity.ok(diaryRepository.save(diary));
     }
